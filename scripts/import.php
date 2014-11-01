@@ -53,6 +53,7 @@ class Card_Importer {
 		$result = var_export( $array, true );
 		$result = preg_replace( '/^  |\G  /m', "\t", $result ); // Tabs for indentation
 		$result = preg_replace( '(\d+\s=>)', "", $result ); // No numeric arrays
+		$result = "<?php" . PHP_EOL . '$cards = ' . $result . ';'; // Make it trully a readable PHP file
 
 		return (bool) file_put_contents( $file, $result );
 	}
