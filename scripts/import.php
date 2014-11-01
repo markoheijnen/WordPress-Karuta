@@ -54,8 +54,19 @@ class Card_Importer {
 		$result = preg_replace( '/^  |\G  /m', "\t", $result ); // Tabs for indentation
 		$result = preg_replace( '(\d+\s=>)', "", $result ); // No numeric arrays
 		$result = "<?php" . PHP_EOL . '$cards = ' . $result . ';'; // Make it trully a readable PHP file
+		$result = preg_replace_callback( "/'(.*?)' => '(.*?)',/", array( $this, 'add_translatable_function' ), $result );
 
 		return (bool) file_put_contents( $file, $result );
+	}
+
+
+	public function add_translatable_function( $matches ) {
+		// Only translate given array keys
+		if ( ! in_array( $matches[1], array( 'reading_card', 'getting_card' ) ) )  {
+			return $matches[0];
+		}
+
+		return "'" . $matches[1] . "' => __( '" . $matches[2] . "', 'karuta' ),";
 	}
 
 }
