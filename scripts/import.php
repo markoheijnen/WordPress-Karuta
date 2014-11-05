@@ -20,25 +20,19 @@ class Card_Importer {
 		$cards = array();
 
 		if ( ( $handle = fopen( $file, "r") ) !== FALSE ) {
-			$data = fgetcsv( $handle, 0, "\r" );
+			// Ignore first two lines. They are labels
+			fgetcsv( $handle, 0, ',' );
 
-			array_shift( $data );
-			array_shift( $data );
-
-			foreach ( $data as $line ) {
-				$no_comma = str_replace( ',', '', $line );
-
-				if ( ! $no_comma ) {
+			while ( ( $line = fgetcsv( $handle, 0, ',' ) ) !== false ) {
+				if ( ! $line[1] || ! $line[2] ) {
 					continue;
 				}
 
-				$l = str_getcsv( $line, "," );
-
 				$cards[] = array(
-					'reading_card' => mb_convert_encoding( $l[0], 'UTF-8', array( 'EUC-JP', 'SHIFT-JIS', 'AUTO' ) ),
-					'getting_card' => $l[1],
+					'reading_card' => mb_convert_encoding( $line[1], 'UTF-8', array( 'EUC-JP', 'SHIFT-JIS', 'AUTO' ) ),
+					'getting_card' => $line[2],
 					'meta' => array(
-						'category' => $l[3],
+						'category' => $line[4],
 					),
 				);
 			}
