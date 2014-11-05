@@ -56,7 +56,7 @@ class Card_Importer {
 
 	public function add_translatable_function( $matches ) {
 		// Only translate given array keys
-		if ( ! in_array( $matches[1], array( 'reading_card', 'getting_card' ) ) )  {
+		if ( ! in_array( $matches[1], array( 'reading_card' ) ) )  { // 'getting_card'
 			return $matches[0];
 		}
 
